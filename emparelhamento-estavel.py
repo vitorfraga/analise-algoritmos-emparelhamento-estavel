@@ -1,14 +1,27 @@
 # coding: utf-8
-"""
-0=>key
-1=>Solteiro
-2=>Preferencia
-3=>Casado
-"""
-df = {'H':[['h1', True, None, None],['h2', True, None, None]], 'M':[['m1',True,'h1', None], ['m2', True, None, None]]}
-solteiro = True
-casais = []
-while solteiro == True:
-    for i in df['H']:
-        print(i[0])
-    solteiro = False
+# %load emparelhamento-estavel.py
+import random
+
+def get_dataset(start = None, end = None):
+    
+    h = {}
+    m = {}
+    
+    i, j = start,  end   
+    while i <= j:
+        h['h'+str(i)] = []
+        m['m'+str(i)] = []
+        i = i + 1
+    
+    k,v = start, end       
+    while k <= j:
+        h_keys  = list(h.keys())
+        m_keys = list(m.keys())
+        random.shuffle(h_keys)
+        random.shuffle(m_keys)        
+        h['h'+str(k)] = m_keys
+        m['m'+str(k)] = h_keys
+        k = k + 1
+        
+    return h, m
+referencia = "http://rosettacode.org/wiki/Stable_marriage_problem#Python"
