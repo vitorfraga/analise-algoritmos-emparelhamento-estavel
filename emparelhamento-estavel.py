@@ -2,7 +2,7 @@
 import random
 
 
- # Referencia do matchmaker  "http://rosettacode.org/wiki/Stable_marriage_problem#Python"
+ # Função tinder inspirada em matchmaker  "http://rosettacode.org/wiki/Stable_marriage_problem#Python"
 
 def tinder(mans, manschoice, womans, womanschoice):
 
