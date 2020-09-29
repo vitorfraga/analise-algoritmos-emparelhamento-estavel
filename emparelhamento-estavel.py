@@ -16,9 +16,9 @@ def tinder(mans, manschoice, womans, womanschoice):
         guy = guysfree.pop(0)
         guyslist = guyprefers2[guy]
         gal = guyslist.pop(0)
-        fiance = engaged.get(gal)
+        intended = engaged.get(gal)
 
-        if not fiance:
+        if not intended:
             # She's free
             engaged[gal] = guy
            
@@ -26,15 +26,15 @@ def tinder(mans, manschoice, womans, womanschoice):
             # The bounder proposes to an engaged lass!
             galslist = galprefers2[gal]
 
-            if galslist.index(fiance) > galslist.index(guy):
+            if galslist.index(intended) > galslist.index(guy):
                 # She prefers new guy
                 engaged[gal] = guy
                
-                if guyprefers2[fiance]:
+                if guyprefers2[intended]:
                     # Ex has more girls to try
-                    guysfree.append(fiance)
+                    guysfree.append(intended)
             else:
-                # She is faithful to old fiance
+                # She is faithful to old intended
                 if guyslist:
                     # Look again
                     guysfree.append(guy)
@@ -73,5 +73,7 @@ mans = list(df['H'].keys())
 womans = list(df['M'].keys())
 manschoice = df['H']
 womanschoice = df['M']
+
 engaged = tinder(mans=mans, manschoice=manschoice, womans=womans, womanschoice=womanschoice)
+
 print(engaged)
