@@ -128,3 +128,6 @@ cython_debug/
 
 # swp files
 *.swp
+
+# output files
+output/

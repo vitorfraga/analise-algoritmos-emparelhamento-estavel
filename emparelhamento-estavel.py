@@ -1,5 +1,15 @@
 # coding: utf-8
 import random
+import time 
+import sys
+import numpy as np
+from matplotlib import pyplot as plt
+from pathlib import Path
+import warnings
+from numba import jit
+#This is to ignore NumbaWarnings and NumbaDeprecationWarnings issued by @jit
+warnings.filterwarnings("ignore", category=Warning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
  # Função tinder inspirada em matchmaker  "http://rosettacode.org/wiki/Stable_marriage_problem#Python"
@@ -41,7 +51,6 @@ def tinder(mans, manschoice, womans, womanschoice):
     return engaged
 
 
-
 def get_dataset(start = None, end = None):
     
     h = {}
@@ -67,13 +76,61 @@ def get_dataset(start = None, end = None):
     
     return f
 
+# Create output folder
+Path("output").mkdir(parents=True, exist_ok=True)
 
-df = get_dataset(1,10)
-mans = list(df['H'].keys())
-womans = list(df['M'].keys())
-manschoice = df['H']
-womanschoice = df['M']
+# Initial prepare
+list_people = list(range(1,1000,20))#[10,50,100,1000,2000,3000,5000,10000]
+times_to_mean = 5
+list_times_tinder = []
+list_times_dataset = []
+for people in list_people:
+    _list_times_tinder = []
+    _list_times_dataset = []
+    for change in range(times_to_mean):
+        ##Create and Open output file
+        f = open(f'output/Log_{people}_{change}.txt', 'w')
+        sys.stdout = f
 
-engaged = tinder(mans=mans, manschoice=manschoice, womans=womans, womanschoice=womanschoice)
+        ##Dataset Creation
+        ###Start counting time for dataset
+        start_time = time.time()
+        ###Create Dataset
+        df = get_dataset(1,people)
+        ###Create List of mans and choices
+        mans = list(df['H'].keys())
+        womans = list(df['M'].keys())
+        manschoice = df['H']
+        womanschoice = df['M']
+        ###Finish counting time for dataset
+        end_time = time.time()
+        print(f"Create Dataset time: {end_time - start_time}")
+        _list_times_dataset.append(end_time - start_time)
 
-print(engaged)
+        ##Tinder Alg
+        ###Start counting time for Tinder
+        start_time = time.time()
+        ###Do Tinder
+        engaged = tinder(mans=mans, manschoice=manschoice, womans=womans, womanschoice=womanschoice)
+        ###Finish counting time for Tinder
+        end_time = time.time()
+        print(f"Tinder time: {end_time - start_time}")
+        _list_times_tinder.append(end_time - start_time)
+        print(f'Casamentos: {engaged}')
+        
+        ###Close File
+        f.close()
+    list_times_tinder.append(np.mean(_list_times_tinder))
+    list_times_dataset.append(np.mean(_list_times_dataset))
+
+
+
+##Create Im Tinder
+plt.figure()
+plt.plot(list_people,list_times_dataset)
+plt.savefig('dataset_run.png')
+
+##Create Img Dataset
+plt.figure()
+plt.plot(list_people,list_times_tinder)
+plt.savefig('Tinder_run.png')
