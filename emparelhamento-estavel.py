@@ -84,6 +84,7 @@ list_people = list(range(1,100,1))#[10,50,100,1000,2000,3000,5000,10000]
 list_people.extend(range(100,1000,10))
 list_people.extend(range(1000,4000,100))
 list_people.extend(range(4000,10000,1000))
+list_people.extend(range(10000,100000,10000))
 
 times_to_mean = 5
 list_times_tinder = []
@@ -134,14 +135,13 @@ for people in list_people:
     ###Close File
     f.close()
 
+    ##Create every time because sometimes shit happen
+    ##Create Im Tinder
+    plt.figure()
+    plt.plot(list_people,list_times_dataset)
+    plt.savefig('dataset_run.png')
 
-
-##Create Im Tinder
-plt.figure()
-plt.plot(list_people,list_times_dataset)
-plt.savefig('dataset_run.png')
-
-##Create Img Dataset
-plt.figure()
-plt.plot(list_people,list_times_tinder)
-plt.savefig('Tinder_run.png')
+    ##Create Img Dataset
+    plt.figure()
+    plt.plot(list_people,list_times_tinder)
+    plt.savefig('Tinder_run.png')
