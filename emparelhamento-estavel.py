@@ -137,10 +137,10 @@ for people in list_people:
     ##Create every time because sometimes shit happen
     ##Create Im Tinder
     plt.figure()
-    plt.plot(list_people[0:len(list_times_dataset)+1],list_times_dataset)
+    plt.plot(list_people[0:len(list_times_dataset)],list_times_dataset)
     plt.savefig('dataset_run.png')
 
     ##Create Img Dataset
     plt.figure()
-    plt.plot(list_people[0:len(list_times_dataset)+1],list_times_tinder)
+    plt.plot(list_people[0:len(list_times_dataset)],list_times_tinder)
     plt.savefig('Tinder_run.png')
