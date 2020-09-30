@@ -130,7 +130,7 @@ cython_debug/
 *.swp
 
 # output files
-output/
+output*/
 
 # VSCode
 .vscode/
