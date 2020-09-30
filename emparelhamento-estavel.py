@@ -80,7 +80,11 @@ def get_dataset(start = None, end = None):
 Path("output").mkdir(parents=True, exist_ok=True)
 
 # Initial prepare
-list_people = list(range(1,1000,20))#[10,50,100,1000,2000,3000,5000,10000]
+list_people = list(range(1,100,1))#[10,50,100,1000,2000,3000,5000,10000]
+list_people.extend(range(100,1000,10))
+list_people.extend(range(1000,4000,100))
+list_people.extend(range(4000,10000,1000))
+
 times_to_mean = 5
 list_times_tinder = []
 list_times_dataset = []
@@ -120,8 +124,15 @@ for people in list_people:
         
         ###Close File
         f.close()
+
+    f = open(f'output/_Log_mean_time.txt', 'w')
+    sys.stdout = f
     list_times_tinder.append(np.mean(_list_times_tinder))
     list_times_dataset.append(np.mean(_list_times_dataset))
+    print(list_times_tinder)
+    print(list_times_dataset)
+    ###Close File
+    f.close()
 
 
 
