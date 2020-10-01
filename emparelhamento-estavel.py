@@ -11,43 +11,28 @@ from numba import jit
 warnings.filterwarnings("ignore", category=Warning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-
- # Função tinder inspirada em matchmaker  "http://rosettacode.org/wiki/Stable_marriage_problem#Python"
-@jit
+#https://cse.buffalo.edu/~hartloff/CSE331-Summer2015/GaleShapley.pdf
 def tinder(mans, manschoice, womans, womanschoice):
-    guysfree = mans
-    engaged  = {}
-    guyprefers2 = manschoice
-    galprefers2 = womanschoice
+    matchs  = {}
 
-    while guysfree:
-
-        guy = guysfree.pop(0)
-        guyslist = guyprefers2[guy]
-        gal = guyslist.pop(0)
-        intended = engaged.get(gal)
-
-        if not intended:
-            # She's free
-            engaged[gal] = guy
+    while mans: #Enquanto existe ao menos um homem solteiro que ainda não propôs namoro para uma mulher
+        man = mans.pop(0) #Pega um homem da lista de homens
+        guys_list = manschoice[man] #Pega as pretendentes desse homem
+        woman = guys_list.pop(0) #Pega a primeira mulher dessa lista
+        actual = matchs.get(woman) #Pergunta pra ela se ela quer namora e ja tem namorado
+        
+        if not actual: #Se m esta disponível (não tem atual)
+            matchs[woman] = man #Ela é solteira e aceita o namoro
            
-        else:
-            # The bounder proposes to an engaged lass!
-            galslist = galprefers2[gal]
+        else: #Se m não esta disponível (tem atual)
+            womans_list = womanschoice[woman] #Procuramos os pretendentes da mulher
+            if womans_list.index(actual) > womans_list.index(man): #Se ela prefere o novo homem
+                mans.append(actual) #atual vira ex e vai procurar outra
+                matchs[woman] = man #ela começa a namorar quem fez o pedido
+            else: #Se ela prefere o atual ao invés que o novo homem
+                mans.append(man) #Novo homem continua solteiro
 
-            if galslist.index(intended) > galslist.index(guy):
-                # She prefers new guy
-                engaged[gal] = guy
-               
-                if guyprefers2[intended]:
-                    # Ex has more girls to try
-                    guysfree.append(intended)
-            else:
-                # She is faithful to old intended
-                if guyslist:
-                    # Look again
-                    guysfree.append(guy)
-    return engaged
+    return matchs
 
 @jit
 def get_dataset(start = None, end = None):
@@ -83,7 +68,7 @@ list_people = list(range(1,100,1))#[10,50,100,1000,2000,3000,5000,10000]
 list_people.extend(range(100,1000,10))
 list_people.extend(range(1000,4000,100))
 list_people.extend(range(4000,10000,1000))
-list_people.extend(range(10000,100000,10000))
+list_people.extend(range(10000,20000,2000))
 
 times_to_mean = 5
 list_times_tinder = []
@@ -121,7 +106,6 @@ for people in list_people:
         print(f"Tinder time: {end_time - start_time}")
         _list_times_tinder.append(end_time - start_time)
         print(f'Casamentos: {engaged}')
-        
         ###Close File
         f.close()
 
@@ -138,9 +122,11 @@ for people in list_people:
     ##Create Im Tinder
     plt.figure()
     plt.plot(list_people[0:len(list_times_dataset)],list_times_dataset)
-    plt.savefig('dataset_run.png')
+    plt.savefig(f'out_dataset/dataset_run{len(list_times_dataset)}.png')
+    plt.close()
 
     ##Create Img Dataset
     plt.figure()
-    plt.plot(list_people[0:len(list_times_dataset)],list_times_tinder)
-    plt.savefig('Tinder_run.png')
+    plt.plot(list_people[0:len(list_times_tinder)],list_times_tinder)
+    plt.savefig(f'out_tinder/Tinder_run{len(list_times_dataset)}.png')
+    plt.close()
